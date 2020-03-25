@@ -58,7 +58,7 @@ body {
 }
 
 .pedia-row {
-  height: calc((100vw - 58px)/16);
+  height: calc((100vw - 16px)/16);
   min-height: 75px;
   display: flex;
   width: fit-content;
@@ -66,12 +66,13 @@ body {
 
 .pedia-item {
   transition: transform .12s;
-  width: calc((100vw - 58px)/16);
+  width: calc((100vw - 16px)/16);
   min-width: 75px;
   border: 1px solid rgb(95, 95, 95);
   background-image: url("./assets/images/background.jpg");
   background-repeat: repeat;
   padding: 10px;
+  margin: -1px;
 }
 
 .pedia-item img {
@@ -84,6 +85,7 @@ body {
   -webkit-transform: scale(1.12); /* Safari 3-8 */
   transform: scale(1.12); 
   cursor: pointer;
+  z-index: 99;
 }
 
 .main::-webkit-scrollbar {
