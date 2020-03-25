@@ -1,5 +1,16 @@
-const monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
 ];
 
 class Item {
@@ -37,15 +48,14 @@ class Item {
   }
 
   monthsAvailable() {
-    return this.months.map(month => monthNames[month]).join(", ")
+    return this.months.map(month => monthNames[month]).join(", ");
   }
-
 }
 
 var FISH = [
   new Item("Bitterling", "River", 0, 24, [0, 1, 2, 10, 11]),
   new Item("Pale chub", "River", 9, 16, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
-  new Item("{{TableContent|type=fish", "160", 0, 24, [
+  new Item("Crucian carp", "River", 0, 24, [
     0,
     1,
     2,
@@ -154,7 +164,7 @@ var FISH = [
   new Item("Angelfish", "River", 16, 9, [4, 5, 6, 7, 8, 9]),
   new Item("Betta", "River", 9, 16, [4, 5, 6, 7, 8, 9]),
   new Item("Neon tetra", "River", 9, 16, [3, 4, 5, 6, 7, 8, 9, 10]),
-  new Item("{{TableContent|type=fish", "800", 0, 24, [0, 5, 6, 7, 8, 9, 10]),
+  new Item("Rainbowfish", "River", 9, 16, [4, 5, 6, 7, 8, 9]),
   new Item("Piranha", "River", 9, 16, [5, 6, 7, 8]),
   new Item("Arowana", "River", 16, 9, [5, 6, 7, 8]),
   new Item("Dorado", "River", 4, 21, [5, 6, 7, 8]),
