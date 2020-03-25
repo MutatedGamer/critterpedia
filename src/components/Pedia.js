@@ -29,7 +29,7 @@ class Pedia extends Component {
                     title={item.name}
                     onClick={() => this.props.openItem(i)}
                 >
-                    <div style={{position: "relative", width:"100%", height: "100%"}}>
+                    <div className="d-flex justify-content-center align-items-center" style={{position: "relative", width:"100%", height: "100%"}}>
                         <img src={fname} alt={item.name}/>
                         {
                             // Include checkmark if caught already
