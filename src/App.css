@@ -96,7 +96,7 @@ body {
          -o-filter: grayscale(100%);
         -ms-filter: grayscale(100%);
             filter: grayscale(100%); 
-    opacity: 25%;
+    opacity: 0.25;
 }
 
 .check {
