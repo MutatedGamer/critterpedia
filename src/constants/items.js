@@ -38,7 +38,7 @@ class Item {
     var endDate = new Date();
 
     if (this.startTime > this.endTime) {
-      endDate.setDate(currentDate.getDay() + 1);
+      endDate.setDate(currentDate.getDate() + 1);
     }
 
     startDate.setHours(this.startTime);
