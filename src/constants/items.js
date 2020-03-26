@@ -47,12 +47,27 @@ class Item {
     return currentDate <= endDate && currentDate >= startDate;
   }
 
+  isLeaving() {
+    var nextMonth = (new Date().getMonth() + 1) % 12;
+    return this.availableToday() && !this.months.includes(nextMonth);
+  }
+
+  isNew() {
+    if (!this.availableToday) {
+      return false;
+    }
+
+    var lastMonth = new Date().getMonth() - 1;
+    lastMonth = lastMonth < 0 ? 11 : lastMonth;
+    return !this.months.includes(lastMonth) && this.availableToday();
+  }
+
   monthsAvailable() {
     return this.months.map(month => monthNames[month]).join(", ");
   }
 }
 
-var FISH = [
+var FISH_NORTH = [
   new Item("Bitterling", "River", 0, 24, [0, 1, 2, 10, 11]),
   new Item("Pale chub", "River", 9, 16, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
   new Item("Crucian carp", "River", 0, 24, [
@@ -247,7 +262,7 @@ var FISH = [
   ])
 ];
 
-var BUGS = [
+var BUGS_NORTH = [
   new Item("Common butterfly", "Flying", 4, 19, [
     0,
     1,
@@ -500,5 +515,478 @@ var BUGS = [
   new Item("Scorpion", "On the ground", 19, 4, [4, 5, 6, 7, 8, 9])
 ];
 
-export var FISH;
-export var BUGS;
+var FISH_SOUTH = [
+  new Item("Bitterling", "River", 0, 24, [4, 5, 6, 7, 8]),
+  new Item("Pale chub", "River", 9, 16, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
+  new Item("Crucian carp", "River", 0, 24, [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Dace", "River", 16, 9, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
+  new Item("Carp", "Pond", 0, 24, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
+  new Item("Koi", "Pond", 16, 9, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
+  new Item("Goldfish", "Pond", 0, 24, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
+  new Item("Pop-eyed Goldfish", "Pond", 9, 16, [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Ranchu Goldfish", "Pond", 9, 16, [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Killifish", "Pond", 9, 16, [0, 1, 9, 10, 11]),
+  new Item("Crawfish", "Pond", 0, 24, [0, 1, 2, 9, 10, 11]),
+  new Item("Soft-shelled Turtle", "River", 16, 9, [1, 2]),
+  new Item("Snapping Turtle", "River", 21, 4, [0, 1, 2, 3, 9, 10, 11]),
+  new Item("Tadpole", "Pond", 0, 24, [0, 8, 9, 10, 11]),
+  new Item("Frog", "Pond", 0, 24, [0, 1, 10, 11]),
+  new Item("Freshwater Goby", "River", 16, 9, [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Loach", "River", 0, 24, [8, 9, 10]),
+  new Item("Catfish", "Pond", 16, 9, [0, 1, 2, 3, 10, 11]),
+  new Item("Giant snakehead", "Pond", 9, 16, [0, 1, 11]),
+  new Item("Bluegill", "River", 9, 16, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
+  new Item("Yellow perch", "River", 0, 24, [3, 4, 5, 6, 7, 8]),
+  new Item("Black bass", "River", 0, 24, [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Tilapia", "River", 0, 24, [0, 1, 2, 3, 11]),
+  new Item("Pike", "River", 0, 24, [2, 3, 4, 5]),
+  new Item("Pond smelt", "River", 0, 24, [5, 6, 7]),
+  new Item("Sweetfish", "River", 0, 24, [0, 1, 2]),
+  new Item("Cherry Salmon", "River (Clifftop)  Pond", 16, 9, [
+    2,
+    3,
+    4,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Char", "River (Clifftop) Pond", 16, 9, [2, 3, 4, 8, 9, 10, 11]),
+  new Item("Golden Trout", "River (Clifftop)", 16, 9, [2, 3, 4, 8, 9, 10]),
+  new Item("Stringfish", "River (Clifftop)", 16, 9, [5, 6, 7, 8]),
+  new Item("Salmon", "River (Mouth)", 0, 24, [2]),
+  new Item("King Salmon", "River (Mouth)", 0, 24, [2]),
+  new Item("Mitten Crab", "River", 16, 9, [2, 3, 4]),
+  new Item("Guppy", "River", 9, 16, [0, 1, 2, 3, 4, 9, 10, 11]),
+  new Item("Nibble Fish", "River", 9, 16, [0, 1, 2, 10, 11]),
+  new Item("Angelfish", "River", 16, 9, [0, 1, 2, 3, 10, 11]),
+  new Item("Betta", "River", 9, 16, [0, 1, 2, 3, 10, 11]),
+  new Item("Neon tetra", "River", 9, 16, [0, 1, 2, 3, 4, 9, 10, 11]),
+  new Item("Rainbowfish", "River", 9, 16, [0, 1, 2, 3, 10, 11]),
+  new Item("Piranha", "River", 9, 16, [0, 1, 2, 11]),
+  new Item("Arowana", "River", 16, 9, [0, 1, 2, 11]),
+  new Item("Dorado", "River", 4, 21, [0, 1, 2, 11]),
+  new Item("Gar", "Pond", 16, 9, [0, 1, 2, 11]),
+  new Item("Arapaima", "River", 16, 9, [0, 1, 2, 11]),
+  new Item("Saddled Bichir", "River", 21, 4, [0, 1, 2, 11]),
+  new Item("Sturgeon", "River (Mouth)", 0, 24, [2, 3, 4, 5, 6, 7, 8]),
+  new Item("Sea butterfly", "Sea", 0, 24, [5, 6, 7, 8]),
+  new Item("Seahorse", "Sea", 0, 24, [0, 1, 2, 3, 4, 9, 10, 11]),
+  new Item("Clownfish", "Sea", 0, 24, [0, 1, 2, 9, 10, 11]),
+  new Item("Surgeonfish", "Sea", 0, 24, [0, 1, 2, 9, 10, 11]),
+  new Item("Butterfly fish", "Sea", 0, 24, [0, 1, 2, 9, 10, 11]),
+  new Item("Napoleonfish", "Sea", 4, 21, [0, 1]),
+  new Item("Zebra turkeyfish", "Sea", 0, 24, [0, 1, 2, 3, 4, 9, 10, 11]),
+  new Item("Blowfish", "Sea", 21, 4, [4, 5, 6, 7]),
+  new Item("Puffer fish", "Sea", 0, 24, [0, 1, 2]),
+  new Item("Anchovy", "Sea", 4, 21, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
+  new Item("Horse mackerel", "Sea", 0, 24, [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Barred knifejaw", "Sea", 0, 24, [0, 1, 2, 3, 4, 8, 9, 10, 11]),
+  new Item("Sea bass", "Sea", 0, 24, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
+  new Item("Red snapper", "Sea", 0, 24, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
+  new Item("Dab", "Sea", 0, 24, [3, 4, 5, 6, 7, 8, 9]),
+  new Item("Olive flounder", "Sea", 0, 24, [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Squid", "Sea", 0, 24, [0, 1, 5, 6, 7, 8, 9, 10, 11]),
+  new Item("Moray eel", "Sea", 0, 24, [1, 2, 3]),
+  new Item("Ribbon eel", "Sea", 0, 24, [0, 1, 2, 3, 11]),
+  new Item("Tuna", "Pier", 0, 24, [4, 5, 6, 7, 8, 9]),
+  new Item("Blue marlin", "Pier", 0, 24, [0, 1, 2, 4, 5, 6, 7, 8, 9]),
+  new Item("Giant trevally", "Pier", 0, 24, [0, 1, 2, 3, 10, 11]),
+  new Item("Mahi-mahi", "Pier", 0, 24, [0, 1, 2, 3, 10, 11]),
+  new Item("Ocean sunfish", "Sea", 4, 21, [0, 1, 2]),
+  new Item("Ray", "Sea", 4, 21, [1, 2, 3, 4]),
+  new Item("Saw shark", "Sea", 16, 9, [0, 1, 2, 11]),
+  new Item("Hammerhead shark", "Sea", 16, 9, [0, 1, 2, 11]),
+  new Item("Shark|Great white shark", "Sea", 16, 9, [0, 1, 2, 11]),
+  new Item("Whale shark", "Sea", 0, 24, [0, 1, 2, 11]),
+  new Item("Suckerfish", "Sea", 0, 24, [0, 1, 2, 11]),
+  new Item("Football fish", "Sea", 16, 9, [4, 5, 6, 7, 8]),
+  new Item("Oarfish", "Sea", 0, 24, [5, 6, 7, 8, 9, 10]),
+  new Item("Barreleye", "Sea", 21, 4, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
+  new Item("Coelacanth", "Sea (Rainy Days)", 0, 24, [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ])
+];
+
+var BUGS_SOUTH = [
+  new Item("Common butterfly", "Flying", 4, 19, [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Yellow butterfly", "Flying", 4, 19, [2, 3, 8, 9, 10, 11]),
+  new Item("Tiger butterfly", "Flying", 4, 19, [0, 1, 2, 8, 9, 10, 11]),
+  new Item("Peacock butterfly", "Flying by rare flowers", 4, 19, [2, 3, 4, 5]),
+  new Item("Common bluebottle", "Flying", 0, 24, [3, 4, 5, 6, 7]),
+  new Item("Paper kite butterfly", "Flying", 8, 19, [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Great purple emperor", "Flying", 4, 19, [4, 5, 6, 7]),
+  new Item("Monarch butterfly", "Flying", 4, 17, [2, 3, 4]),
+  new Item("Emperor butterfly", "Flying", 17, 8, [0, 1, 2, 5, 6, 7, 8, 11]),
+  new Item("Agrias butterfly", "Flying", 8, 17, [0, 1, 2, 9, 10, 11]),
+  new Item("Rajah Brooke's birdwing", "Flying", 8, 17, [
+    0,
+    1,
+    2,
+    5,
+    6,
+    7,
+    9,
+    10,
+    11
+  ]),
+  new Item("Queen Alexandra's birdwing", "Flying", 8, 16, [0, 1, 2, 10, 11]),
+  new Item("Moth", "Flying by light", 19, 4, [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Atlas moth", "On Trees", 19, 4, [0, 1, 2, 9, 10, 11]),
+  new Item("Madagascan sunset moth", "Flying", 8, 16, [0, 1, 2, 9, 10, 11]),
+  new Item("Long locust", "Hopping", 8, 19, [0, 1, 2, 3, 4, 9, 10, 11]),
+  new Item("Migratory locust", "Hopping", 8, 19, [1, 2, 3, 4]),
+  new Item("Rice grasshopper", "Hopping", 8, 19, [1, 2, 3, 4]),
+  new Item("Grasshopper", "Hopping", 8, 17, [0, 1, 2]),
+  new Item("Cricket", "Hopping", 17, 8, [2, 3, 4]),
+  new Item("Bell cricket", "Hopping", 17, 8, [2, 3]),
+  new Item("Mantis", "On Flowers", 8, 17, [0, 1, 2, 3, 4, 8, 9, 10, 11]),
+  new Item("Orchid mantis", "On flowers (White)", 8, 17, [
+    0,
+    1,
+    2,
+    3,
+    4,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Honeybee", "Flying near flowers", 8, 17, [0, 8, 9, 10, 11]),
+  new Item("Wasp", "Shake tree", 0, 24, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
+  new Item("Brown cicada", "On Trees", 8, 17, [6, 7]),
+  new Item("Robust cicada", "On Trees", 8, 17, [6, 7]),
+  new Item("Giant cicada", "On Trees", 8, 17, [6, 7]),
+  new Item("Walker cicada", "On Trees", 8, 17, [1, 2]),
+  new Item("Evening cicada", "On Trees", 4, 20, [6, 7]),
+  new Item("Cicada shell", "On Trees", 0, 24, [6, 7]),
+  new Item("Red dragonfly", "Flying", 8, 19, [2, 3]),
+  new Item("Darner dragonfly", "Flying", 8, 17, [0, 1, 2, 3, 9, 10, 11]),
+  new Item("Banded dragonfly", "Flying", 8, 17, [0, 1, 2, 3, 10, 11]),
+  new Item("Damselfly", "Flying", 0, 24, [0, 1, 10, 11]),
+  new Item("Firefly", "Flying", 19, 4, [5]),
+  new Item("Mole cricket", "Underground", 0, 24, [4, 5, 6, 7, 8, 9, 10]),
+  new Item("Pondskater", "On Ponds and Rivers", 8, 19, [0, 1, 2, 10, 11]),
+  new Item("Diving beetle", "On Ponds and Rivers", 8, 19, [0, 1, 2, 10, 11]),
+  new Item("Giant water bug", "On Ponds and Rivers", 19, 8, [
+    0,
+    1,
+    2,
+    9,
+    10,
+    11
+  ]),
+  new Item("Stinkbug", "On flowers", 0, 24, [0, 1, 2, 3, 8, 9, 10, 11]),
+  new Item("Man-faced stink bug", "On flowers", 19, 8, [
+    0,
+    1,
+    2,
+    3,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Ladybug", "On flowers", 8, 17, [2, 3, 4, 5, 9]),
+  new Item("Tiger beetle", "On the ground", 0, 24, [
+    0,
+    1,
+    2,
+    3,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Jewel beetle", "On Trees", 0, 24, [3, 4, 5, 6, 7]),
+  new Item("Violin beetle", "On a tree stump", 0, 24, [2, 3, 4, 10, 11]),
+  new Item("Citrus long-horned beetle", "On a tree stump", 0, 24, [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Rosalia batesi beetle", "On a tree stump", 0, 24, [
+    0,
+    1,
+    2,
+    10,
+    11
+  ]),
+  new Item("Blue weevil beetle", "?", 0, 24, [6, 7]),
+  new Item("Dung beetle", "?", 0, 24, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
+  new Item("Earth-boring dung beetle", "On Ground", 0, 24, [0, 1, 2]),
+  new Item("Scarab beetle", "On Tree", 23, 8, [6, 7]),
+  new Item("Drone beetle", "On Tree", 0, 24, [5, 6, 7]),
+  new Item("Goliath beetle", "On Trees (Palm)", 17, 8, [0, 1, 2, 11]),
+  new Item("Saw stag", "On Trees", 0, 24, [6, 7]),
+  new Item("Miyama stag", "On Trees", 0, 24, [6, 7]),
+  new Item("Giant stag", "On Trees", 23, 8, [6, 7]),
+  new Item("Rainbow stag", "On Trees", 19, 8, [0, 1, 2, 11]),
+  new Item("Cyclommatus stag", "On Trees", 17, 8, [6, 7]),
+  new Item("Golden stag", "On Trees", 17, 8, [6, 7]),
+  new Item("Giraffe stag", "On Trees", 17, 8, [6, 7]),
+  new Item("Horned dynastid", "On Trees", 17, 8, [6, 7]),
+  new Item("Horned atlas", "On Trees", 17, 8, [6, 7]),
+  new Item("Horned elephant", "On Trees", 17, 8, [6, 7]),
+  new Item("Horned hercules", "On Trees", 17, 8, [6, 7]),
+  new Item("Walking stick", "Shaking Tree", 4, 20, [5, 6, 7, 8, 9, 10]),
+  new Item("Walking leaf", "Under Trees Disguised as Leafs", 0, 24, [0, 1, 2]),
+  new Item("Bagworm", "In trees", 0, 24, [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Ant", "On rotten food", 0, 24, [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Hermit crab", "Beach disguised as shells", 19, 8, [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Wharf roach", "On beach rocks", 0, 24, [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Fly", "On trash items", 0, 24, [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Mosquito", "Flying", 17, 4, [0, 1, 2, 11]),
+  new Item("Flea", "Villager's Heads", 0, 24, [0, 1, 2, 3, 4, 9, 10, 11]),
+  new Item("Snail", "On rocks (Rain)", 0, 24, [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Pill bug", "Hit a rock", 23, 16, [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
+  new Item("Centipede", "Hit a rock", 16, 23, [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
+  new Item("Spider", "Shaking tree", 19, 8, [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]),
+  new Item("Tarantula", "On the ground", 19, 4, [0, 1, 2, 3, 10, 11]),
+  new Item("Scorpion", "On the ground", 19, 4, [0, 1, 2, 3, 10, 11])
+];
+
+export var FISH_NORTH;
+export var FISH_SOUTH;
+export var BUGS_NORTH;
+export var BUGS_SOUTH;

@@ -106,3 +106,9 @@ body {
   bottom: -5px;
   right: -5px;
 }
+
+.my-switch {
+  margin-right: -6px !important;
+  padding-top: 7px;
+
+}

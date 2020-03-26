@@ -16,10 +16,20 @@ class Pedia extends Component {
             var fname = "assets/images/" + this.props.type + "/" + (i + 1) + ".png"
 
             var disabled = false
-            if (this.props.onlyNow) {
+            if (this.props.now) {
                 disabled = !item.availableNow()
-            } else if (this.props.onlyToday) {
-                disabled = !item.availableToday()
+            }
+            
+            if (this.props.today) {
+                disabled = disabled || !item.availableToday()
+            }
+
+            if (this.props.leaving) {
+                disabled = disabled || !item.isLeaving()
+            }
+
+            if (this.props.new) {
+                disabled = disabled || !item.isNew()
             }
 
             return(

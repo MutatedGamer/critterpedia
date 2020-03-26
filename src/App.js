@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import { Container, Row, Col, FormGroup, CustomInput, Label, Input, Modal, ModalHeader, ModalFooter, ModalBody, Button } from "reactstrap"
 import Pedia from "./components/Pedia"
-import { FISH, BUGS } from "./constants/items"
+import { FISH_NORTH, FISH_SOUTH, BUGS_NORTH, BUGS_SOUTH } from "./constants/items"
 
 function getCurrentMonthName(month){
   var monthNamelist = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
@@ -14,8 +14,9 @@ class App extends Component {
   constructor(props) {
     super(props);
     var caught = JSON.parse(localStorage.getItem('caught')) || {'fish': [], 'bugs': []}
+    var hemisphere = localStorage.getItem('hemisphere') || "north"
     var type = localStorage.getItem('type') || "bugs"
-    this.state = {caught, onlyToday: false, onlyNow: false, modal: false, item: 0, type}
+    this.state = {caught, hemisphere, today: false, now: false, new: false, leaving: false, modal: false, item: 0, type}
   }
 
   markCaught = () => {
@@ -46,6 +47,17 @@ class App extends Component {
     this.setState({modal: !this.state.modal})
   }
 
+  toggleHemisphere = () => {
+    var hemisphere
+    if (this.state.hemisphere === "north") {
+      hemisphere = "south"
+    } else {
+      hemisphere = "north"
+    }
+    localStorage.setItem("hemisphere", hemisphere)
+    this.setState({hemisphere})
+  }
+
   togglePedia = () => {
     var type
     if (this.state.type === "fish") {
@@ -62,7 +74,13 @@ class App extends Component {
     const startTimeDate = new Date(0);
     const endTimeDate = new Date(0);
 
-    var items = (this.state.type === "bugs") ? BUGS : FISH
+    var items
+    if (this.state.hemisphere === "north") {
+      items = (this.state.type === "bugs") ? BUGS_NORTH : FISH_NORTH
+    } else {
+      items = (this.state.type === "bugs") ? BUGS_SOUTH : FISH_SOUTH
+    }
+
     startTimeDate.setHours(items[this.state.item].startTime);
     endTimeDate.setHours(items[this.state.item].endTime);
 
@@ -74,23 +92,45 @@ class App extends Component {
 
     return (
       <Container fluid>
+        <Row>
+          <Col className="pt-2 d-flex justify-content-center align-items-center">
+            <img src={"logo.png"} alt="Critterpedia Logo" />
+          </Col>
+        </Row>
         <Row className="p-2">
-          <Col>
-            <FormGroup>
-              Bugs <CustomInput onChange={this.togglePedia} checked={this.state.type === "fish"} type="switch" id="typeSwitch" name="typeSwitch" inline /> Fish
+          <Col xs={7} className="d-flex flex-column justify-content-center align-items-center">
+            <FormGroup inline className="float-left">
+              North <CustomInput onChange={this.toggleHemisphere} checked={this.state.hemisphere === "south"} type="switch" className="my-switch" id="hemisphereSwitch" name="hemisphereSwitch" inline /> South
+            </FormGroup>
+            {'   '}
+            <FormGroup inline className="float-left">
+              Bugs <CustomInput onChange={this.togglePedia} checked={this.state.type === "fish"} type="switch" className="my-switch" id="typeSwitch" name="typeSwitch" inline /> Fish
             </FormGroup>
           </Col>
-          <Col>
-            <FormGroup check inline className="float-right">
+          <Col xs={5} className="d-flex flex-column align-items-center">
+            <div className="d-flex flex-column align-items-start">
+            <FormGroup check inline>
               <Label check>
-                <Input type="checkbox" onChange={this.onChange} name="onlyNow" checked={this.state.onlyNow} /> Available NOW
+                <Input type="checkbox" onChange={this.onChange} name="now" checked={this.state.now} /> NOW
               </Label>
             </FormGroup>
-            <FormGroup check inline className="float-right">
+            <FormGroup check inline>
               <Label check>
-                <Input type="checkbox" onChange={this.onChange} name="onlyToday" checked={this.state.onlyToday} /> Available this month
+                <Input type="checkbox" onChange={this.onChange} name="today" checked={this.state.today} /> Today
               </Label>
             </FormGroup>
+            <FormGroup check inline>
+              <Label check>
+                <Input type="checkbox" onChange={this.onChange} name="leaving" checked={this.state.leaving} /> Leaving
+              </Label>
+            </FormGroup>
+            <FormGroup check inline>
+              <Label check>
+                <Input type="checkbox" onChange={this.onChange} name="new" checked={this.state.new} /> New
+              </Label>
+            </FormGroup>
+            </div>
+           
           </Col>
         </Row>
         <Row>
@@ -99,8 +139,10 @@ class App extends Component {
               items={items}
               type={this.state.type}
               caught={this.state.caught} 
-              onlyToday={this.state.onlyToday} 
-              onlyNow={this.state.onlyNow}
+              today={this.state.today} 
+              now={this.state.now}
+              leaving={this.state.leaving}
+              new={this.state.new}
               openItem={this.openItem}
             />
             <div>
