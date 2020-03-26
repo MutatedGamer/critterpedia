@@ -151,7 +151,11 @@ class App extends Component {
                 <ModalBody>
                   <ul>
                     <li>Location: {items[this.state.item].location}</li>
-                    <li>Months: {items[this.state.item].monthsAvailable()}</li>
+                    {
+                      items[this.state.item].months.length === 12 ? 
+                      <li>Months: All year</li> :
+                      <li>Months: {items[this.state.item].monthsAvailable()}</li>
+                    }
                     {
                       items[this.state.item].startTime === 0 && items[this.state.item].endTime === 24 ? 
                       <li>Time: All day</li> :
