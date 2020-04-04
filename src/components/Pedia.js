@@ -32,6 +32,10 @@ class Pedia extends Component {
                 disabled = disabled || !item.isNew()
             }
 
+            if (this.props.uncaught) {
+                disabled = disabled || this.props.caught[this.props.type].includes(i)
+            }
+
             return(
                 <div 
                     key={"item-"+i} 

@@ -42,7 +42,9 @@ class Item {
     }
 
     startDate.setHours(this.startTime);
+    startDate.setMinutes(0, 0, 0);
     endDate.setHours(this.endTime);
+    endDate.setMinutes(0, 0, 0)
 
     return currentDate <= endDate && currentDate >= startDate;
   }
@@ -67,7 +69,7 @@ class Item {
   }
 }
 
-var FISH_NORTH = [
+export var FISH_NORTH = [
   new Item("Bitterling", "River", 0, 24, [0, 1, 2, 10, 11]),
   new Item("Pale chub", "River", 9, 16, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
   new Item("Crucian carp", "River", 0, 24, [
@@ -262,7 +264,7 @@ var FISH_NORTH = [
   ])
 ];
 
-var BUGS_NORTH = [
+export var BUGS_NORTH = [
   new Item("Common butterfly", "Flying", 4, 19, [
     0,
     1,
@@ -515,7 +517,7 @@ var BUGS_NORTH = [
   new Item("Scorpion", "On the ground", 19, 4, [4, 5, 6, 7, 8, 9])
 ];
 
-var FISH_SOUTH = [
+export var FISH_SOUTH = [
   new Item("Bitterling", "River", 0, 24, [4, 5, 6, 7, 8]),
   new Item("Pale chub", "River", 9, 16, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
   new Item("Crucian carp", "River", 0, 24, [
@@ -710,7 +712,7 @@ var FISH_SOUTH = [
   ])
 ];
 
-var BUGS_SOUTH = [
+export var BUGS_SOUTH = [
   new Item("Common butterfly", "Flying", 4, 19, [
     2,
     3,
@@ -985,8 +987,3 @@ var BUGS_SOUTH = [
   new Item("Tarantula", "On the ground", 19, 4, [0, 1, 2, 3, 10, 11]),
   new Item("Scorpion", "On the ground", 19, 4, [0, 1, 2, 3, 10, 11])
 ];
-
-export var FISH_NORTH;
-export var FISH_SOUTH;
-export var BUGS_NORTH;
-export var BUGS_SOUTH;

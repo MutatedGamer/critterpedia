@@ -4,11 +4,6 @@ import { Container, Row, Col, FormGroup, CustomInput, Label, Input, Modal, Modal
 import Pedia from "./components/Pedia"
 import { FISH_NORTH, FISH_SOUTH, BUGS_NORTH, BUGS_SOUTH } from "./constants/items"
 
-function getCurrentMonthName(month){
-  var monthNamelist = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
-  return monthNamelist[month];
-};
-
 class App extends Component {
 
   constructor(props) {
@@ -16,7 +11,7 @@ class App extends Component {
     var caught = JSON.parse(localStorage.getItem('caught')) || {'fish': [], 'bugs': []}
     var hemisphere = localStorage.getItem('hemisphere') || "north"
     var type = localStorage.getItem('type') || "bugs"
-    this.state = {caught, hemisphere, today: false, now: false, new: false, leaving: false, modal: false, item: 0, type}
+    this.state = {caught, hemisphere, today: false, now: false, new: false, leaving: false, modal: false, uncaught: false, item: 0, type}
   }
 
   markCaught = () => {
@@ -109,28 +104,32 @@ class App extends Component {
           </Col>
           <Col xs={5} className="d-flex flex-column align-items-center">
             <div className="d-flex flex-column align-items-start">
-            <FormGroup check inline>
+              <FormGroup check inline>
+                <Label check>
+                  <Input type="checkbox" onChange={this.onChange} name="now" checked={this.state.now} /> NOW
+                </Label>
+              </FormGroup>
+              <FormGroup check inline>
+                <Label check>
+                  <Input type="checkbox" onChange={this.onChange} name="today" checked={this.state.today} /> Today
+                </Label>
+              </FormGroup>
+              <FormGroup check inline>
+                <Label check>
+                  <Input type="checkbox" onChange={this.onChange} name="leaving" checked={this.state.leaving} /> Leaving
+                </Label>
+              </FormGroup>
+              <FormGroup check inline>
+                <Label check>
+                  <Input type="checkbox" onChange={this.onChange} name="new" checked={this.state.new} /> New
+                </Label>
+              </FormGroup>
+              <FormGroup check inline>
               <Label check>
-                <Input type="checkbox" onChange={this.onChange} name="now" checked={this.state.now} /> NOW
-              </Label>
-            </FormGroup>
-            <FormGroup check inline>
-              <Label check>
-                <Input type="checkbox" onChange={this.onChange} name="today" checked={this.state.today} /> Today
-              </Label>
-            </FormGroup>
-            <FormGroup check inline>
-              <Label check>
-                <Input type="checkbox" onChange={this.onChange} name="leaving" checked={this.state.leaving} /> Leaving
-              </Label>
-            </FormGroup>
-            <FormGroup check inline>
-              <Label check>
-                <Input type="checkbox" onChange={this.onChange} name="new" checked={this.state.new} /> New
-              </Label>
-            </FormGroup>
+                  <Input type="checkbox" onChange={this.onChange} name="uncaught" checked={this.state.uncaught} /> Uncaught
+                </Label>
+              </FormGroup>
             </div>
-           
           </Col>
         </Row>
         <Row>
@@ -143,6 +142,7 @@ class App extends Component {
               now={this.state.now}
               leaving={this.state.leaving}
               new={this.state.new}
+              uncaught={this.state.uncaught}
               openItem={this.openItem}
             />
             <div>
