@@ -152,6 +152,11 @@ class App extends Component {
                   <ul>
                     <li>Location: {items[this.state.item].location}</li>
                     {
+                      this.state.type === "fish" ?
+                      <li>Size: {items[this.state.item].size}</li> :
+                      ""
+                    }
+                    {
                       items[this.state.item].months.length === 12 ? 
                       <li>Months: All year</li> :
                       <li>Months: {items[this.state.item].monthsAvailable()}</li>
@@ -161,6 +166,7 @@ class App extends Component {
                       <li>Time: All day</li> :
                       <li>Time: {startTimeDate.toLocaleTimeString('en-US', options)} - {endTimeDate.toLocaleTimeString('en-US', options)}</li>
                     }
+                    <li>Sell Price: {items[this.state.item].price}</li>
                   </ul>
                 </ModalBody>
                 <ModalFooter>
